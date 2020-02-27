@@ -3,12 +3,11 @@ Graphing Wars
 features:
 -setup all the SDL stuff for the game
 -movement
--firing basic shot
-
+-firing basic with a normal shot
 
 Libraries required:
-SDL2
-SDL2_image
+SDL2 (https://www.libsdl.org/download-2.0.php)
+SDL2_image (https://www.libsdl.org/projects/SDL_image/)
 
 Build with:
 make
@@ -24,3 +23,4 @@ a - left
 s - down
 d - right
 space - fire
+mouse - to aim

@@ -3,7 +3,7 @@
 
 #include "player.h"
 
-player *player_init(sdl_state *state, char *filename, int x, int y, float delta)
+player *player_init(sdl_state *state, char *filename, int x, int y, float vel)
 {
 	player *p = malloc(sizeof(player));
 	SDL_Surface *temp = IMG_Load(filename);
@@ -26,7 +26,9 @@ player *player_init(sdl_state *state, char *filename, int x, int y, float delta)
 	p->height = 40;
 	p->x = x;
 	p->y = y;
-	p->vel = delta;
+	p->vel = vel;
+	p->power = 1;
+	p->direction = M_PI/3;
 	
 	return p;
 }

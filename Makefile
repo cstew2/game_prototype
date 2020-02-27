@@ -2,7 +2,7 @@ TARGET		= graphing_wars
 
 CC		= 
 LINCC		= gcc
-WINCC		= gcc
+WINCC		= gcc #need to set up cross compiler
 
 CFLAGS		= -std=c11
 DCFLAGS		= -g -ggdb3 -O0 -Wall -Werror
@@ -11,9 +11,9 @@ RCFLAGS		= -O2 -march=native -ftree-vectorize -finline-functions -funswitch-loop
 LD		= gcc
 LDFLAGS		= 
 DLDFLAGS	= 
-RLDFLAGS	= -s -static
+RLDFLAGS	= -s #-static will have to add a bunch of static libs first
 
-LIBS		= -lSDL2 -lSDL2_image 
+LIBS		= -lm -lSDL2 -lSDL2_image 
 
 SRCDIR		= ./src
 

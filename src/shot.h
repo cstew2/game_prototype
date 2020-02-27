@@ -15,14 +15,18 @@ typedef struct {
 	shot_type type;
 	player *owner;
 
-	float vel;
-       	SDL_Rect *pos;
+	float xvel;
+	float yvel;
+	float x;
+	float y;
+	int width;
+	int height;
 	SDL_Texture *sprite;
 }shot;
 
-shot *shot_init(sdl_state *state, player *owner, shot_type type, char *filename, float delta);
+shot *shot_init(sdl_state *state, player *owner, shot_type type, char *filename);
 int shot_term(shot *s);
 
-void normal_shot();
+void shot_normal_update(shot *s, float delta);
 
 #endif

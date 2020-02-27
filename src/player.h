@@ -20,6 +20,9 @@ typedef struct {
 	bool down;
 	bool left;
 	bool right;
+
+	float direction;
+	float power;
 	
 }player;
 

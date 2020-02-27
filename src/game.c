@@ -118,7 +118,10 @@ int render(game_state *state)
 		SDL_RenderCopy(state->sdl->renderer,
 			       state->shots[i]->sprite,
 			       NULL,
-			       state->shots[i]->pos);
+			       &(SDL_Rect){state->shots[i]->x,
+					   state->shots[i]->y,
+					   state->shots[i]->width,
+					   state->shots[i]->height});
 	}
 	
 	SDL_RenderPresent(state->sdl->renderer);
@@ -153,8 +156,7 @@ int input(game_state *state)
 				state->shots[state->shot_count++] = shot_init(state->sdl,
 									      state->players[0],
 									      NORMAL,
-									      "./res/circle.png",
-									      0.25);
+									      "./res/circle.png");
 				break;
 			default:
 				break;
@@ -179,7 +181,20 @@ int input(game_state *state)
 				break;
 			}
 		}
+		else if(event.type == SDL_MOUSEBUTTONDOWN) {
+			int x;
+			int y;
+			SDL_GetMouseState(&x, &y);
+
+			if(event.button.button == SDL_BUTTON_LEFT) {
+				state->players[0]->direction = atan2(y - state->players[0]->y,
+								     x - state->players[0]->x);
+			}	
+		}
 	}
+
+
+	
 	return 0;	
 }
 
@@ -190,6 +205,7 @@ int update(game_state *state)
 		
 	SDL_UpdateWindowSurface(state->sdl->window);
 
+	//update 
 	if(state->players[0]->up) {
 		state->players[0]->y += state->players[0]->vel * delta;
 	}
@@ -203,6 +219,10 @@ int update(game_state *state)
 		state->players[0]->x -= state->players[0]->vel * delta;
 	}
 
+	for(int i=0; i < state->shot_count; i++) {
+		shot_normal_update(state->shots[i], delta);
+	}
+       	
 	state->last_ticks = SDL_GetTicks();
 	
 	return 0;	
