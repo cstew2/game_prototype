@@ -3,16 +3,17 @@ TARGET		= graphing_wars
 CC		= 
 LINCC		= gcc
 WINCC		= gcc
-CFLAGS		= -std=c11 -I$(INCDIR)
+
+CFLAGS		= -std=c11
 DCFLAGS		= -g -ggdb3 -O0 -Wall -Werror
-RCFLAGS		= -02 -march=native -ftree-vectorize finline-functions -funswitch-loops
+RCFLAGS		= -O2 -march=native -ftree-vectorize -finline-functions -funswitch-loops
 
 LD		= gcc
 LDFLAGS		= 
-DLDFLAGS	=
-RLDFLAGS	= -s 
+DLDFLAGS	= 
+RLDFLAGS	= -s -static
 
-LIBS		= -lSDL2 -lSDL2_image
+LIBS		= -lSDL2 -lSDL2_image 
 
 SRCDIR		= ./src
 

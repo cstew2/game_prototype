@@ -29,8 +29,9 @@ sdl_state *sdl_init()
 	}
 
 	int img_flags = IMG_INIT_PNG | IMG_INIT_JPG;
-	if(IMG_Init(img_flags) & img_flags) {
-		printf("Error initializing SDL image library\n");
+	if(!(IMG_Init(img_flags) & img_flags)) {
+		printf("Error initializing SDL image library\n SDL_Image error: %s\n",
+			IMG_GetError());
 		return NULL;
 	}
 

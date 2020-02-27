@@ -1,0 +1,26 @@
+Graphing Wars
+
+features:
+-setup all the SDL stuff for the game
+-movement
+-firing basic shot
+
+
+Libraries required:
+SDL2
+SDL2_image
+
+Build with:
+make
+
+Run with:
+make run
+or
+navigate to correct build directory and run there
+
+Play with:
+w - up
+a - left
+s - down
+d - right
+space - fire

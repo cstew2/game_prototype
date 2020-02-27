@@ -11,6 +11,6 @@ typedef struct {
 }arena;
 
 arena *arena_init(sdl_state *state, char *filename);
-int arena_term(arena *the_arena);
+int arena_term(arena *a);
 
 #endif

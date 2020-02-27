@@ -12,18 +12,19 @@
 
 typedef struct {
 	bool quit;
+	float last_ticks;
 	sdl_state *sdl;
 	
 	arena *the_arena;
 
 	int effect_count;
-	effect *effects;
+	effect **effects;
 	
 	int player_count;
-	player *players;
+	player **players;
 
 	int shot_count;
-	shot *shots;
+	shot **shots;
 }game_state;
 
 game_state *game_init();
