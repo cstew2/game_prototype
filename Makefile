@@ -10,10 +10,14 @@ RCFLAGS		= -O2 -march=native -ftree-vectorize -finline-functions -funswitch-loop
 
 LD		= gcc
 LDFLAGS		= 
-DLDFLAGS	= 
-RLDFLAGS	= -s #-static will have to add a bunch of static libs first
+DLDFLAGS	= -s
+RLDFLAGS	= 
 
-LIBS		= -lm -lSDL2 -lSDL2_image 
+LIBS		= 
+DLIBS		= -lm -lpthread -lSDL2 -lSDL2_image
+SLIBS		= -lm -lpthread -ldl -lasound -lpng -ljpeg -ltiff -lwebp -lX11 -lXext  -lXcursor \
+		  -lXinerama -lXi -lXrandr -lXxf86vm -lgbm -ldrm  \
+		  -Wl,-Bstatic -lSDL2 -lSDL2_image -Wl,-Bdynamic
 
 SRCDIR		= ./src
 
@@ -38,10 +42,12 @@ ifeq ($(BUILD),debug)
 PREFIX:=$(PREFIX)/debug
 CFLAGS+=$(DCFLAGS)
 LDFLAGS+=$(DLDFLAGS)
+LIBS+=$(DLIBS)
 else ifeq ($(BUILD),release)
 PREFIX:=$(PREFIX)/release
 CFLAGS+=$(RCFLAGS)
 LDFLAGS+=$(RLDFLAGS)
+LIBS+=$(SLIBS)
 else
 $(error BUILD not found)
 endif

@@ -7,12 +7,7 @@
 #include "player.h"
 #include "render.h"
 
-typedef enum {
-	NORMAL, BOUNCING, FUNCTION, SPLIT
-}shot_type;
-
 typedef struct {
-	shot_type type;
 	player *owner;
 
 	float xvel;
@@ -24,9 +19,11 @@ typedef struct {
 	SDL_Texture *sprite;
 }shot;
 
-shot *shot_init(sdl_state *state, player *owner, shot_type type, char *filename);
+shot *shot_init(sdl_state *state, player *owner, char *filename);
 int shot_term(shot *s);
 
 void shot_normal_update(shot *s, float delta);
+
+void shot_draw(sdl_state *state, shot *s);
 
 #endif

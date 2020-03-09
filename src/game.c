@@ -115,13 +115,7 @@ int render(game_state *state)
 	
 	//draw shots
 	for(int i=0; i < state->shot_count; i++) {
-		SDL_RenderCopy(state->sdl->renderer,
-			       state->shots[i]->sprite,
-			       NULL,
-			       &(SDL_Rect){state->shots[i]->x,
-					   state->shots[i]->y,
-					   state->shots[i]->width,
-					   state->shots[i]->height});
+		shot_draw(state->sdl, state->shots[i]);
 	}
 	
 	SDL_RenderPresent(state->sdl->renderer);
@@ -155,7 +149,6 @@ int input(game_state *state)
 			case SDLK_SPACE:
 				state->shots[state->shot_count++] = shot_init(state->sdl,
 									      state->players[0],
-									      NORMAL,
 									      "./res/circle.png");
 				break;
 			default:

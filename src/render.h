@@ -6,6 +6,9 @@ typedef struct  {
 	int window_width;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
+
+	float xscale;
+	float yscale;
 }sdl_state;
 
 sdl_state *sdl_init();

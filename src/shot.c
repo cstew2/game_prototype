@@ -4,7 +4,7 @@
 
 #include "shot.h"
 
-shot *shot_init(sdl_state *state, player *owner, shot_type type, char *filename)
+shot *shot_init(sdl_state *state, player *owner, char *filename)
 {
 	shot *s = malloc(sizeof(shot));
 
@@ -19,7 +19,6 @@ shot *shot_init(sdl_state *state, player *owner, shot_type type, char *filename)
 		return NULL;
 	}
 
-	s->type = type;
 	s->owner = owner;
 	
 	s->width = 5;
@@ -44,4 +43,15 @@ void shot_normal_update(shot *s, float delta)
 {
 	s->x -= s->xvel * delta;
 	s->y -= s->yvel * delta;
+}
+
+void shot_draw(sdl_state *state, shot *s)
+{
+	SDL_RenderCopy(state->renderer,
+			       s->sprite,
+			       NULL,
+			       &(SDL_Rect){s->x,
+					   s->y,
+					   s->width,
+					   s->height});
 }
