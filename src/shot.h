@@ -1,8 +1,9 @@
 #ifndef __SHOT_H__
 #define __SHOT_H__
 
+#include <stdint.h>
+
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 #include "player.h"
 #include "render.h"
@@ -19,7 +20,7 @@ typedef struct {
 	SDL_Texture *sprite;
 }shot;
 
-shot *shot_init(sdl_state *state, player *owner, char *filename);
+shot *shot_init(sdl_state *state, player *owner);
 int shot_term(shot *s);
 
 void shot_normal_update(shot *s, float delta);

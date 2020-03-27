@@ -2,11 +2,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
-#include <SDL2/SDL_image.h>
 
 #include "game.h"
-
-static int MAX_SHOTS = 128;
 
 int main(int argc, char **argv)
 {
@@ -34,8 +31,7 @@ game_state *game_init()
 		return NULL;
 	}
 	
-	state->the_arena = arena_init(state->sdl,
-				      "./res/graph_tex.png");
+	state->the_arena = arena_init(state->sdl, 32, 32);
 	if(!state->the_arena) {
 		return NULL;
 	}
@@ -43,19 +39,21 @@ game_state *game_init()
 	state->player_count = 1;
 	state->players = malloc(sizeof(player)*state->player_count);
 	state->players[0] = player_init(state->sdl,
-					"./res/circle.png",
 					20,
 					20,
-					0.25);
+					0.25,
+					0xFF0000FF);
 	if(!state->players[0]) {
 		return NULL;
 	}
 	
 	
-	state->shot_count = 0;
-	state->shots = malloc(sizeof(shot) * MAX_SHOTS);
-	state->effect_count = 0;
+	state->shot_max = 5;
+	state->shots = malloc(sizeof(shot) * state->shot_max);
+	state->shot_start = 0;
+	state->shot_end = 0;
 	
+	state->effect_count = 0;
 	
 	return state;
 }
@@ -99,24 +97,26 @@ int render(game_state *state)
 		SDL_RenderCopy(state->sdl->renderer,
 			       state->effects[i]->sprite,
 			       NULL,
-			       state->effects[i]->pos);
+			       &(SDL_Rect){state->effects[i]->x,
+					       state->effects[i]->y,
+					       state->effects[i]->width,
+					       state->effects[i]->height});
 	}
 	
 	//draw players
 	for(int i=0; i < state->player_count; i++) {
-		SDL_RenderCopy(state->sdl->renderer,
-			       state->players[i]->sprite,
-			       NULL,
-			       &(SDL_Rect){state->players[i]->x,
-					   state->players[i]->y,
-					   state->players[i]->width,
-					   state->players[i]->height});
+		player_draw(state->sdl, state->players[i]);
 	}
 	
 	//draw shots
-	for(int i=0; i < state->shot_count; i++) {
-		shot_draw(state->sdl, state->shots[i]);
-	}
+	for(int i=0; i < state->shot_max; i++) {
+		int idx = (state->shot_start + i) % state->shot_max;
+		printf("i=%i, idx=%i, end=%i\n", i, idx, state->shot_end);
+		if(idx == state->shot_end) {
+			break;
+		}
+		shot_draw(state->sdl, state->shots[idx]);
+	}	
 	
 	SDL_RenderPresent(state->sdl->renderer);
 	return 0;
@@ -147,9 +147,8 @@ int input(game_state *state)
 				state->players[0]->right = true;
 				break;
 			case SDLK_SPACE:
-				state->shots[state->shot_count++] = shot_init(state->sdl,
-									      state->players[0],
-									      "./res/circle.png");
+				state->shots[state->shot_end] = shot_init(state->sdl, state->players[0]);
+				state->shot_end = (state->shot_end + 1) % state->shot_max;
 				break;
 			default:
 				break;
@@ -185,8 +184,6 @@ int input(game_state *state)
 			}	
 		}
 	}
-
-
 	
 	return 0;	
 }
@@ -212,11 +209,16 @@ int update(game_state *state)
 		state->players[0]->x -= state->players[0]->vel * delta;
 	}
 
-	for(int i=0; i < state->shot_count; i++) {
-		shot_normal_update(state->shots[i], delta);
+	for(int i=0; i < state->shot_max; i++) {
+		int idx = (state->shot_start + i) % state->shot_max;
+		printf("i=%i, idx=%i, end=%i\n", i, idx, state->shot_end);
+		if(idx == state->shot_end) {
+			break;
+		}
+		shot_normal_update(state->shots[idx] , delta);
 	}
-       	
-	state->last_ticks = SDL_GetTicks();
 	
-	return 0;	
+state->last_ticks = SDL_GetTicks();
+	
+return 0;	
 }

@@ -4,18 +4,36 @@
 
 #include "shot.h"
 
-shot *shot_init(sdl_state *state, player *owner, char *filename)
+#include "shapes.h"
+#include "util.h"
+
+shot *shot_init(sdl_state *state, player *owner)
 {
 	shot *s = malloc(sizeof(shot));
 
-	SDL_Surface *temp = IMG_Load(filename);
+	int size = min(10 * state->xscale, 10 * state->yscale);
+	int radius = size/2 - 2;
+
+	uint32_t *bitmap = calloc(size * size, sizeof(uint32_t));
+	draw_circle(bitmap, owner->shot_colour, size, size/2, size/2, radius);
+
+	SDL_Surface *temp = SDL_CreateRGBSurfaceFrom((void *)bitmap,
+						     size,
+						     size,
+						     32,
+						     4*size,
+						     0xFF000000,
+						     0x00FF0000,
+						     0x0000FF00,
+						     0x000000FF);
 	if(!temp) {
-		printf("Can't load \"%s\"\nSDL2_Image Error: %s\n",
-		       filename, IMG_GetError());
+		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
+	
 	s->sprite = SDL_CreateTextureFromSurface(state->renderer, temp);
 	if(!s->sprite) {
+		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
 

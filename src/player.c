@@ -3,17 +3,36 @@
 
 #include "player.h"
 
-player *player_init(sdl_state *state, char *filename, int x, int y, float vel)
+#include "shapes.h"
+#include "util.h"
+
+player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour)
 {
 	player *p = malloc(sizeof(player));
-	SDL_Surface *temp = IMG_Load(filename);
+	
+	int size = min(32 * state->xscale, 32 * state->yscale);
+	int radius = size/2 - 2;
+
+	uint32_t *bitmap = calloc(size * size, sizeof(uint32_t));
+	draw_circle(bitmap, colour, size, size/2, size/2, radius);
+
+	SDL_Surface *temp = SDL_CreateRGBSurfaceFrom((void *)bitmap,
+						     size,
+						     size,
+						     32,
+						     4*size,
+						     0xFF000000,
+						     0x00FF0000,
+						     0x0000FF00,
+						     0x000000FF);
 	if(!temp) {
-		printf("Can't load \"%s\"\nSDL2_Image Error: %s\n",
-		       filename, IMG_GetError());
+		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
+	
 	p->sprite = SDL_CreateTextureFromSurface(state->renderer, temp);
 	if(!p->sprite) {
+		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
 
@@ -29,6 +48,8 @@ player *player_init(sdl_state *state, char *filename, int x, int y, float vel)
 	p->vel = vel;
 	p->power = 1;
 	p->direction = M_PI/3;
+
+	p->shot_colour = 0xFFFFFFFF;
 	
 	return p;
 }
@@ -38,4 +59,15 @@ int player_term(player *p)
 	SDL_DestroyTexture(p->sprite);
 	free(p);
 	return 0;
+}
+
+void player_draw(sdl_state *state, player *p)
+{
+	SDL_RenderCopy(state->renderer,
+		       p->sprite,
+		       NULL,
+		       &(SDL_Rect){p->x,
+				   p->y,
+				   p->width,
+				   p->height});
 }

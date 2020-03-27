@@ -10,7 +10,7 @@ typedef struct {
 	SDL_Texture *background;
 }arena;
 
-arena *arena_init(sdl_state *state, char *filename);
+arena *arena_init(sdl_state *state, int size_x, int size_y);
 int arena_term(arena *a);
 
 #endif

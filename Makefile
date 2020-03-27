@@ -10,14 +10,14 @@ RCFLAGS		= -O2 -march=native -ftree-vectorize -finline-functions -funswitch-loop
 
 LD		= gcc
 LDFLAGS		= 
-DLDFLAGS	= -s
-RLDFLAGS	= 
+DLDFLAGS	= $(DCFLAGS)
+RLDFLAGS	= -s $(RCFLAGS)
 
 LIBS		= 
-DLIBS		= -lm -lpthread -lSDL2 -lSDL2_image
+DLIBS		= -lm -lpthread -lSDL2
 SLIBS		= -lm -lpthread -ldl -lasound -lpng -ljpeg -ltiff -lwebp -lX11 -lXext  -lXcursor \
 		  -lXinerama -lXi -lXrandr -lXxf86vm -lgbm -ldrm  \
-		  -Wl,-Bstatic -lSDL2 -lSDL2_image -Wl,-Bdynamic
+		  -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic
 
 SRCDIR		= ./src
 
@@ -26,8 +26,8 @@ INC		= $(wildcard $(SRCDIR)/*.h)
 
 PREFIX		= build
 
-OS=linux
-BUILD=debug
+OS ?=linux
+BUILD ?=debug
 ifeq ($(OS),linux)
 PREFIX:=$(PREFIX)/linux
 CC=$(LINCC)

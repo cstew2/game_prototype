@@ -7,6 +7,7 @@ typedef struct  {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 
+	float aspect_ratio;
 	float xscale;
 	float yscale;
 }sdl_state;

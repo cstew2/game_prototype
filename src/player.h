@@ -2,9 +2,9 @@
 #define __PLAYER_H__
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 #include "render.h"
 
@@ -23,10 +23,13 @@ typedef struct {
 
 	float direction;
 	float power;
-	
+
+	uint32_t shot_colour;
 }player;
 
-player *player_init(sdl_state *state, char *filename, int x, int y, float delta);
+player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour);
 int player_term(player *p);
+
+void player_draw(sdl_state *state, player *p);
 
 #endif

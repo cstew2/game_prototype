@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 #include "render.h"
 
@@ -10,6 +9,10 @@ sdl_state *sdl_init()
 	sdl_state *state = malloc(sizeof(sdl_state));
 	state->window_width = 500;
 	state->window_height = 500;
+
+	state->aspect_ratio = 1.0;
+	state->xscale = 1.0;
+	state->yscale = 1.0;
 	
 	state->window = SDL_CreateWindow("Graph Battle",
 					 SDL_WINDOWPOS_UNDEFINED,
@@ -18,6 +21,7 @@ sdl_state *sdl_init()
 					 state->window_height,
 					 SDL_WINDOW_SHOWN);
 	if(!state->window) {
+		printf("%s", SDL_GetError());
 		return NULL;
 	}
         
@@ -25,21 +29,14 @@ sdl_state *sdl_init()
 					     -1,
 					     SDL_RENDERER_ACCELERATED);
 	if(!state->renderer) {
+		printf("%s", SDL_GetError());
 		return NULL;
 	}
-
-	int img_flags = IMG_INIT_PNG | IMG_INIT_JPG;
-	if(!(IMG_Init(img_flags) & img_flags)) {
-		printf("Error initializing SDL image library\n SDL_Image error: %s\n",
-			IMG_GetError());
-		return NULL;
-	}
-
+	
 	return state;
 }
 int sdl_term(sdl_state *state)
 {
-	IMG_Quit();
 	SDL_DestroyRenderer(state->renderer);
 	SDL_DestroyWindow(state->window);
 	free(state);

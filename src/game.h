@@ -14,6 +14,10 @@ typedef struct {
 	bool quit;
 	float last_ticks;
 	sdl_state *sdl;
+
+	float aspect_ratio;
+	float x_scale;
+	float y_scale;
 	
 	arena *the_arena;
 
@@ -23,8 +27,10 @@ typedef struct {
 	int player_count;
 	player **players;
 
-	int shot_count;
+	int shot_start;
+	int shot_end;
 	shot **shots;
+	size_t shot_max;
 }game_state;
 
 game_state *game_init();
