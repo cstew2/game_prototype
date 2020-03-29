@@ -2,13 +2,16 @@ TARGET		= graphing_wars
 
 CC		= 
 LINCC		= gcc
-WINCC		= gcc #need to set up cross compiler
+WINCC		= 
 
 CFLAGS		= -std=c11
 DCFLAGS		= -g -ggdb3 -O0 -Wall -Werror
 RCFLAGS		= -O2 -march=native -ftree-vectorize -finline-functions -funswitch-loops
 
-LD		= gcc
+LD		= 
+LINLD		= gcc
+WINLD		= x86_64-w64-mingw32-gcc
+
 LDFLAGS		= 
 DLDFLAGS	= $(DCFLAGS)
 RLDFLAGS	= -s $(RCFLAGS)
@@ -31,11 +34,13 @@ BUILD ?=debug
 ifeq ($(OS),linux)
 PREFIX:=$(PREFIX)/linux
 CC=$(LINCC)
+LD=$(LINLD)
 else ifeq ($(OS),windows)
-PREFIX:=$(PREFIX)windows
+PREFIX:=$(PREFIX)/windows
 CC=$(WINCC)
+LD=$(WINLD)
 else
-$(error OS not found)
+$(error $(OS) not a supported OS target)
 endif
 
 ifeq ($(BUILD),debug)

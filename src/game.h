@@ -34,11 +34,12 @@ typedef struct {
 }game_state;
 
 game_state *game_init();
-int game_term(game_state *game);
+void game_term(game_state *game);
 
-int main_game_loop();
-int render(game_state *state);
-int input(game_state *state);
-int update(game_state *state);
+void main_game_loop(game_state *game);
+
+void render(game_state *state);
+void input(game_state *state);
+void update(game_state *state);
 
 #endif

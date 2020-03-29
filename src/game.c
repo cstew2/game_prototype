@@ -5,13 +5,6 @@
 
 #include "game.h"
 
-int main(int argc, char **argv)
-{
-	main_game_loop();
-	
-	return 0;
-}
-
 game_state *game_init()
 {
 	if(SDL_Init(SDL_INIT_AUDIO |
@@ -57,7 +50,7 @@ game_state *game_init()
 	return state;
 }
 
-int game_term(game_state *state)
+void game_term(game_state *state)
 {
 	sdl_term(state->sdl);
 	arena_term(state->arena);
@@ -83,25 +76,18 @@ int game_term(game_state *state)
 	
 	free(state);
 	SDL_Quit();
-	return 0;
 }
 
-int main_game_loop()
+void main_game_loop(game_state *state)
 {
-	game_state *state = game_init();
-	if(state == NULL) {
-		return -1;
-	}
 	while(!state->quit) {
 		input(state);
 		update(state);
 		render(state);
 	}
-	game_term(state);
-	return 0;
 }
 
-int render(game_state *state)
+void render(game_state *state)
 {
 	SDL_RenderClear(state->sdl->renderer);
 	SDL_SetRenderDrawColor(state->sdl->renderer, 255, 255, 255, 255);
@@ -138,10 +124,9 @@ int render(game_state *state)
 	}	
 	
 	SDL_RenderPresent(state->sdl->renderer);
-	return 0;
 }
 
-int input(game_state *state)
+void input(game_state *state)
 {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
@@ -203,11 +188,9 @@ int input(game_state *state)
 			}	
 		}
 	}
-	
-	return 0;	
 }
 
-int update(game_state *state)
+void update(game_state *state)
 {
 	float ticks = SDL_GetTicks();
 	float delta = state->last_ticks - ticks;
@@ -252,6 +235,4 @@ int update(game_state *state)
 	}
 	
 	state->last_ticks = SDL_GetTicks();
-	
-	return 0;	
 }
