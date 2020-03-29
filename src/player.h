@@ -12,6 +12,7 @@ typedef struct {
 	SDL_Texture *sprite;
 	int width;
 	int height;
+	
 	float x;
 	float y;
 	float vel;
@@ -23,8 +24,10 @@ typedef struct {
 
 	float direction;
 	float power;
-
+	
 	uint32_t shot_colour;
+
+	float fuel;
 }player;
 
 player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour);

@@ -6,7 +6,7 @@
 
 sdl_state *sdl_init()
 {
-	sdl_state *state = malloc(sizeof(sdl_state));
+	sdl_state *state = calloc(1, sizeof(sdl_state));
 	state->window_width = 500;
 	state->window_height = 500;
 
@@ -27,7 +27,8 @@ sdl_state *sdl_init()
         
 	state->renderer = SDL_CreateRenderer(state->window,
 					     -1,
-					     SDL_RENDERER_ACCELERATED);
+					     SDL_RENDERER_ACCELERATED |
+					     SDL_RENDERER_PRESENTVSYNC);
 	if(!state->renderer) {
 		printf("%s", SDL_GetError());
 		return NULL;

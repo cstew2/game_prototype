@@ -23,7 +23,7 @@ game_state *game_init()
 		return NULL;
 	}
 	
-	game_state *state = malloc(sizeof(game_state));
+	game_state *state = calloc(1, sizeof(game_state));
 	state->quit = false;
 
 	state->sdl = sdl_init();
@@ -31,13 +31,13 @@ game_state *game_init()
 		return NULL;
 	}
 	
-	state->the_arena = arena_init(state->sdl, 32, 32);
-	if(!state->the_arena) {
+	state->arena = arena_init(state->sdl, 32, 32);
+	if(!state->arena) {
 		return NULL;
 	}
 
 	state->player_count = 1;
-	state->players = malloc(sizeof(player)*state->player_count);
+	state->players = calloc(state->player_count, sizeof(player));
 	state->players[0] = player_init(state->sdl,
 					20,
 					20,
@@ -47,9 +47,8 @@ game_state *game_init()
 		return NULL;
 	}
 	
-	
-	state->shot_max = 5;
-	state->shots = malloc(sizeof(shot) * state->shot_max);
+	state->shot_max = 128;
+	state->shots = calloc(state->shot_max, sizeof(shot));
 	state->shot_start = 0;
 	state->shot_end = 0;
 	
@@ -58,10 +57,31 @@ game_state *game_init()
 	return state;
 }
 
-int game_term(game_state *game)
+int game_term(game_state *state)
 {
-	sdl_term(game->sdl);
-	free(game);
+	sdl_term(state->sdl);
+	arena_term(state->arena);
+
+	for(int i=0; i < state->player_count; i++) {
+		player_term(state->players[i]);
+	}
+	free(state->players);
+
+	for(int i=0; i < state->effect_count; i++) {
+		effect_term(state->effects[i]);
+	}	
+
+	while(1) {
+		int idx = (state->shot_start) % state->shot_max;
+		if(idx == state->shot_end) {
+			break;
+		}
+		shot_term(state->shots[idx]);
+		state->shot_start++;
+	}
+	free(state->shots);
+	
+	free(state);
 	SDL_Quit();
 	return 0;
 }
@@ -88,7 +108,7 @@ int render(game_state *state)
 	
 	//draw background
 	SDL_RenderCopy(state->sdl->renderer,
-		       state->the_arena->background,
+		       state->arena->background,
 		       NULL,
 		       NULL);
 
@@ -111,7 +131,6 @@ int render(game_state *state)
 	//draw shots
 	for(int i=0; i < state->shot_max; i++) {
 		int idx = (state->shot_start + i) % state->shot_max;
-		printf("i=%i, idx=%i, end=%i\n", i, idx, state->shot_end);
 		if(idx == state->shot_end) {
 			break;
 		}
@@ -211,14 +230,28 @@ int update(game_state *state)
 
 	for(int i=0; i < state->shot_max; i++) {
 		int idx = (state->shot_start + i) % state->shot_max;
-		printf("i=%i, idx=%i, end=%i\n", i, idx, state->shot_end);
 		if(idx == state->shot_end) {
 			break;
 		}
+		shot_out(state->sdl, state->shots[idx]);
 		shot_normal_update(state->shots[idx] , delta);
 	}
+
+	while(1) {
+		int idx = (state->shot_start) % state->shot_max;
+		if(idx == state->shot_end) {
+			break;
+		}
+		if(state->shots[idx]->out) {
+			shot_term(state->shots[idx]);
+			state->shot_start++;
+		}
+		else{
+			break;
+		}
+	}
 	
-state->last_ticks = SDL_GetTicks();
+	state->last_ticks = SDL_GetTicks();
 	
-return 0;	
+	return 0;	
 }

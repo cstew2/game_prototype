@@ -8,9 +8,9 @@
 
 player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour)
 {
-	player *p = malloc(sizeof(player));
-	
-	int size = min(32 * state->xscale, 32 * state->yscale);
+	player *p = calloc(1, sizeof(player));
+
+	int size = mini(32 * state->xscale, 32 * state->yscale);
 	int radius = size/2 - 2;
 
 	uint32_t *bitmap = calloc(size * size, sizeof(uint32_t));
@@ -31,25 +31,27 @@ player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour)
 	}
 	
 	p->sprite = SDL_CreateTextureFromSurface(state->renderer, temp);
+	free(bitmap);
 	if(!p->sprite) {
 		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
 
+	p->width = size;
+	p->height = size;
+	
 	p->up = false;
 	p->down = false;
 	p->left = false;
 	p->right = false;
 	
-	p->width = 40;
-	p->height = 40;
 	p->x = x;
 	p->y = y;
 	p->vel = vel;
-	p->power = 1;
+	p->power = 0.5;
 	p->direction = M_PI/3;
 
-	p->shot_colour = 0xFFFFFFFF;
+	p->shot_colour = 0x000000FF;
 	
 	return p;
 }

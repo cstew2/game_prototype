@@ -4,10 +4,13 @@
 
 #include "effect.h"
 
-effect *effect_init(sdl_state *state)
+effect *effect_init(sdl_state *state, effect_type t)
 {
-	effect *e = malloc(sizeof(effect));
+	effect *e = calloc(1, sizeof(effect));
+	e->type = t;
 
+	
+	
 	return e;
 }
 

@@ -19,7 +19,7 @@ typedef struct {
 	float x_scale;
 	float y_scale;
 	
-	arena *the_arena;
+	arena *arena;
 
 	int effect_count;
 	effect **effects;

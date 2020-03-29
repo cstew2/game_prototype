@@ -1,6 +1,8 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
+#include <SDL2/SDL.h>
+
 typedef struct  {
 	int window_height;
 	int window_width;

@@ -15,8 +15,8 @@ RLDFLAGS	= -s $(RCFLAGS)
 
 LIBS		= 
 DLIBS		= -lm -lpthread -lSDL2
-SLIBS		= -lm -lpthread -ldl -lasound -lpng -ljpeg -ltiff -lwebp -lX11 -lXext  -lXcursor \
-		  -lXinerama -lXi -lXrandr -lXxf86vm -lgbm -ldrm  \
+SLIBS		= -lm -lpthread -ldl -lasound -lpng -ljpeg -ltiff -lwebp -lX11 -lXext -lXcursor \
+		  -lXinerama -lXi -lXrandr -lXxf86vm -lgbm -ldrm \
 		  -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic
 
 SRCDIR		= ./src
@@ -62,8 +62,18 @@ $(PREFIX)/obj/%.o:$(SRCDIR)/%.c $(SRCDIR)/%.h
 $(PREFIX)/bin/$(TARGET): $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $@ $(LIBS)
 
+.PHONY: run
 run:
 	./$(PREFIX)/bin/$(TARGET)
 
+.PHONY: valgrind
+valgrind:
+	valgrind ./$(PREFIX)/bin/$(TARGET)
+
+.PHONY: gdb
+gdb:
+	gdb ./$(PREFIX)/bin/$(TARGET)
+
+.PHONY: clean
 clean:
 	rm -rf ./build

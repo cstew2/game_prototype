@@ -5,7 +5,7 @@
 
 arena *arena_init(sdl_state *state, int size_x, int size_y)
 {
-	arena *a = malloc(sizeof(arena));
+	arena *a = calloc(1, sizeof(arena));
 
 	uint32_t *bitmap = calloc(state->window_width * state->window_height, sizeof(uint32_t));
 	uint32_t blue = 0x1020FFFF;
@@ -32,12 +32,13 @@ arena *arena_init(sdl_state *state, int size_x, int size_y)
 						     0x00FF0000,
 						     0x0000FF00,
 						     0x000000FF);
+	
 	if(!temp) {
 		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
-	
 	a->background = SDL_CreateTextureFromSurface(state->renderer, temp);
+	free(bitmap);
 	SDL_FreeSurface(temp);
 	if(!a->background) {
 		printf("%s\n", SDL_GetError());
