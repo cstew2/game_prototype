@@ -10,7 +10,13 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	menu_init();
+	/*
+	menu_init(state,
+		  "Graph Wars",
+		  "Or: How I Learned to Stop Worrying and Love the Maths");
+	*/
+
+	main_game_loop(state);
 	
 	game_term(state);
 	

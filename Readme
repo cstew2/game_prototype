@@ -1,7 +1,9 @@
 Graphing Wars
 
 Author: Christopher Steward
+Source: https://github.com/cstew2/game_prototype
 Redistribution: Can publish on OWL.
+
 
 features:
 -setup all the SDL stuff for the game
@@ -10,6 +12,17 @@ features:
 
 Libraries required:
 SDL2 (https://www.libsdl.org/download-2.0.php)
+SDL2_ttf (https://www.libsdl.org/projects/SDL_ttf/)
+
+Tested on:
+Gentoo 2.6
+Kernel: 5.5.4
+gcc: 
+clang: 
+
+SDL2: 2.0.10
+SDL2-ttf: 2.0.14
+
 
 Build with:
 make
@@ -26,3 +39,6 @@ s - down
 d - right
 space - fire
 mouse - to aim
+
+References:
+https://lazyfoo.net/tutorials/SDL/index.php

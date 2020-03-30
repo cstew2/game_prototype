@@ -12,7 +12,7 @@ typedef enum {
 }object_type;
 
 typedef enum {
-	circle, polygon
+	line, circle, polygon
 }object_shape;
 
 typedef struct {

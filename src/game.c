@@ -1,21 +1,12 @@
 #include <stdlib.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_timer.h>
+//#include <SDL2/SDL_timer.h>
 
 #include "game.h"
 
 game_state *game_init()
 {
-	if(SDL_Init(SDL_INIT_AUDIO |
-		    SDL_INIT_TIMER |
-		    SDL_INIT_VIDEO |
-		    SDL_INIT_EVENTS |
-		    SDL_INIT_GAMECONTROLLER)) {
-		printf("Error initializing SDL");
-		return NULL;
-	}
-	
 	game_state *state = calloc(1, sizeof(game_state));
 	state->quit = false;
 
@@ -29,16 +20,37 @@ game_state *game_init()
 		return NULL;
 	}
 
-	state->player_count = 1;
+	
+	
+	state->player_count = 2;
 	state->players = calloc(state->player_count, sizeof(player));
 	state->players[0] = player_init(state->sdl,
 					20,
 					20,
 					0.25,
 					0xFF0000FF);
-	if(!state->players[0]) {
+	
+	state->players[1] = player_init(state->sdl,
+					460,
+					460,
+					0.25,
+					0x00FF00FF);
+	if(!state->players[0] || !state->players[1]) {
 		return NULL;
 	}
+
+	state->object_count = 1;
+	size_t vertex_count = 4;
+	point *vertices = calloc(vertex_count, sizeof(point));
+	vertices[0] = (point){100, 0};
+	vertices[1] = (point){120, 20};
+	vertices[2] = (point){20, 120};
+	vertices[3] = (point){0, 100};
+	
+	state->objects = calloc(state->object_count, sizeof(object));
+	state->objects[0] = object_init(state->sdl, reflect, polygon, 0xBB1530FF,
+					200, 200, vertices, vertex_count);
+	free(vertices);
 	
 	state->shot_max = 128;
 	state->shots = calloc(state->shot_max, sizeof(shot));
@@ -100,18 +112,17 @@ void render(game_state *state)
 
 	//draw enviromental elements
 	for(int i=0; i < state->effect_count; i++) {
-		SDL_RenderCopy(state->sdl->renderer,
-			       state->effects[i]->sprite,
-			       NULL,
-			       &(SDL_Rect){state->effects[i]->x,
-					       state->effects[i]->y,
-					       state->effects[i]->width,
-					       state->effects[i]->height});
+		effect_draw(state->sdl, state->effects[i]);
 	}
 	
 	//draw players
 	for(int i=0; i < state->player_count; i++) {
 		player_draw(state->sdl, state->players[i]);
+	}
+
+	//draw objects
+	for(int i=0; i < state->object_count; i++) {
+		object_draw(state->sdl, state->objects[i]);
 	}
 	
 	//draw shots

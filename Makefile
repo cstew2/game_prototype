@@ -2,7 +2,7 @@ TARGET		= graphing_wars
 
 CC		= 
 LINCC		= gcc
-WINCC		= 
+WINCC		= x86_64-w64-mingw32-gcc
 
 CFLAGS		= -std=c11
 DCFLAGS		= -g -ggdb3 -O0 -Wall -Werror
@@ -17,10 +17,10 @@ DLDFLAGS	= $(DCFLAGS)
 RLDFLAGS	= -s $(RCFLAGS)
 
 LIBS		= 
-DLIBS		= -lm -lpthread -lSDL2
+DLIBS		= -lm -lpthread -lSDL2 -lSDL2_ttf
 SLIBS		= -lm -lpthread -ldl -lasound -lpng -ljpeg -ltiff -lwebp -lX11 -lXext -lXcursor \
-		  -lXinerama -lXi -lXrandr -lXxf86vm -lgbm -ldrm \
-		  -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic
+		  -lXinerama -lXi -lXrandr -lXxf86vm -lgbm -ldrm -lrt -lfreetype \
+		  -Wl,-Bstatic -lSDL2 -lSDL2_ttf -Wl,-Bdynamic
 
 SRCDIR		= ./src
 

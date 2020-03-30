@@ -8,7 +8,7 @@ effect *effect_init(sdl_state *state, effect_type t)
 {
 	effect *e = calloc(1, sizeof(effect));
 	e->type = t;
-
+	
 	
 	
 	return e;
@@ -28,6 +28,12 @@ void effect_normal_update(effect *e, float delta)
 
 void effect_draw(sdl_state *state, effect *e)
 {
-	
+		SDL_RenderCopy(state->renderer,
+		       e->sprite,
+		       NULL,
+		       &(SDL_Rect){e->x,
+				       e->y,
+				       e->width,
+				       e->height});
 }
 

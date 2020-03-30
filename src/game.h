@@ -2,13 +2,15 @@
 #define __GAME_H__
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "render.h"
 
 #include "arena.h"
-#include "player.h"
-#include "shot.h"
 #include "effect.h"
+#include "player.h"
+#include "object.h"
+#include "shot.h"
 
 typedef struct {
 	bool quit;
@@ -21,12 +23,15 @@ typedef struct {
 	
 	arena *arena;
 
-	int effect_count;
+	size_t effect_count;
 	effect **effects;
 	
-	int player_count;
+	size_t player_count;
 	player **players;
 
+	size_t object_count;
+	object **objects;
+	
 	int shot_start;
 	int shot_end;
 	shot **shots;

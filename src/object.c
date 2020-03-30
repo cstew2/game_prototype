@@ -22,7 +22,7 @@ object *object_init(sdl_state *state, object_type t, object_shape s, uint32_t co
 
 	uint32_t *bitmap = calloc(o->width * o->height, sizeof(uint32_t));
 	draw_poly(bitmap, colour, o->width, o->height, vertices, vertex_count);
-
+	
 	SDL_Surface *temp = SDL_CreateRGBSurfaceFrom((void *)bitmap,
 						     o->width,
 						     o->height,
@@ -43,14 +43,12 @@ object *object_init(sdl_state *state, object_type t, object_shape s, uint32_t co
 		printf("%s\n", SDL_GetError());
 		return NULL;
 	}
-
-	
-	
-	
+		
 	o->type = t;
 	o->shape = s;
 	o->x = x;
 	o->y = y;
+	o->vertices = calloc(vertex_count, sizeof(point));
 	memcpy(o->vertices, vertices, vertex_count);
 	o->vertex_count = vertex_count;
 	
@@ -66,5 +64,11 @@ int object_term(object *o)
 
 void object_draw(sdl_state *state, object *o)
 {
-	
+	SDL_RenderCopy(state->renderer,
+		       o->sprite,
+		       NULL,
+		       &(SDL_Rect){o->x,
+				       o->y,
+				       o->width,
+				       o->height});
 }
