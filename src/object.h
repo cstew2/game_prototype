@@ -8,11 +8,11 @@
 
 
 typedef enum {
-	bounce, absorb, reflect
+	object_bounce, object_absorb, object_reflect
 }object_type;
 
 typedef enum {
-	line, circle, polygon
+	object_line, object_circle, object_polygon
 }object_shape;
 
 typedef struct {
@@ -26,7 +26,7 @@ typedef struct {
 	float x;
 	float y;
 
-	float *vertices;
+	point *vertices;
 	size_t vertex_count;
 
 }object;

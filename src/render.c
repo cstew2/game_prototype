@@ -56,6 +56,7 @@ int sdl_term(sdl_state *state)
 	SDL_DestroyRenderer(state->renderer);
 	SDL_DestroyWindow(state->window);
 	free(state);
+	SDL_Quit();
 	return 0;
 }
 

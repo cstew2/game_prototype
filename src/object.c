@@ -49,7 +49,7 @@ object *object_init(sdl_state *state, object_type t, object_shape s, uint32_t co
 	o->x = x;
 	o->y = y;
 	o->vertices = calloc(vertex_count, sizeof(point));
-	memcpy(o->vertices, vertices, vertex_count);
+	memcpy(o->vertices, vertices, sizeof(point)*vertex_count);
 	o->vertex_count = vertex_count;
 	
 	return o;

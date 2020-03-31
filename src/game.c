@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include <SDL2/SDL.h>
-//#include <SDL2/SDL_timer.h>
 
 #include "game.h"
 
@@ -19,8 +18,6 @@ game_state *game_init()
 	if(!state->arena) {
 		return NULL;
 	}
-
-	
 	
 	state->player_count = 2;
 	state->players = calloc(state->player_count, sizeof(player));
@@ -28,13 +25,15 @@ game_state *game_init()
 					20,
 					20,
 					0.25,
-					0xFF0000FF);
+					0xFF0000FF,
+					0);
 	
 	state->players[1] = player_init(state->sdl,
 					460,
 					460,
 					0.25,
-					0x00FF00FF);
+					0x00FF00FF,
+					1);
 	if(!state->players[0] || !state->players[1]) {
 		return NULL;
 	}
@@ -48,7 +47,7 @@ game_state *game_init()
 	vertices[3] = (point){0, 100};
 	
 	state->objects = calloc(state->object_count, sizeof(object));
-	state->objects[0] = object_init(state->sdl, reflect, polygon, 0xBB1530FF,
+	state->objects[0] = object_init(state->sdl, object_reflect, object_polygon, 0xBB1530FF,
 					200, 200, vertices, vertex_count);
 	free(vertices);
 	
@@ -87,7 +86,6 @@ void game_term(game_state *state)
 	free(state->shots);
 	
 	free(state);
-	SDL_Quit();
 }
 
 void main_game_loop(game_state *state)
@@ -192,10 +190,8 @@ void input(game_state *state)
 			int x;
 			int y;
 			SDL_GetMouseState(&x, &y);
-
 			if(event.button.button == SDL_BUTTON_LEFT) {
-				state->players[0]->direction = atan2(y - state->players[0]->y,
-								     x - state->players[0]->x);
+				player_aim(state->players[0], x, y);
 			}	
 		}
 	}
@@ -208,29 +204,30 @@ void update(game_state *state)
 		
 	SDL_UpdateWindowSurface(state->sdl->window);
 
-	//update 
-	if(state->players[0]->up) {
-		state->players[0]->y += state->players[0]->vel * delta;
+	//update players
+	for(int i=0; i < state->player_count; i++) {
+		player_move(state->sdl, state->players[i], delta);
 	}
-	if(state->players[0]->down) {
-		state->players[0]->y -= state->players[0]->vel * delta;
-	}
-	if(state->players[0]->left) {
-		state->players[0]->x += state->players[0]->vel * delta;
-	}
-	if(state->players[0]->right) {
-		state->players[0]->x -= state->players[0]->vel * delta;
-	}
-
+	
+	//update shots
 	for(int i=0; i < state->shot_max; i++) {
 		int idx = (state->shot_start + i) % state->shot_max;
 		if(idx == state->shot_end) {
 			break;
 		}
+		
 		shot_out(state->sdl, state->shots[idx]);
-		shot_normal_update(state->shots[idx] , delta);
-	}
+       		shot_update(state->shots[idx], state->objects, state->object_count,
+			    state->players, state->player_count, delta);
 
+		
+		for(int j=0; j < state->player_count; j++) {
+			if(shot_player_collide(state->shots[idx], state->players[j])) {
+				printf("Player %i wins\n", state->shots[idx]->owner->num);
+			}
+		}
+	}
+	
 	while(1) {
 		int idx = (state->shot_start) % state->shot_max;
 		if(idx == state->shot_end) {
@@ -241,6 +238,7 @@ void update(game_state *state)
 			state->shot_start++;
 		}
 		else{
+				
 			break;
 		}
 	}

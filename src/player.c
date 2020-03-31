@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "player.h"
 
 #include "shapes.h"
 #include "util.h"
 
-player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour)
+player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour, int num)
 {
 	player *p = calloc(1, sizeof(player));
 
@@ -39,6 +40,7 @@ player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour)
 
 	p->width = size;
 	p->height = size;
+	p->radius = radius;
 	
 	p->up = false;
 	p->down = false;
@@ -63,6 +65,22 @@ int player_term(player *p)
 	return 0;
 }
 
+void player_move(sdl_state *state, player *p, float delta)
+{
+	if(p->up && p->y > 0) {
+		p->y += p->vel * delta;
+	}
+	if(p->down && p->y < state->window_height - p->height) {
+		p->y -= p->vel * delta;
+	}
+	if(p->left && p->x > 0) {
+		p->x += p->vel * delta;
+	}
+	if(p->right && p->x < state->window_width - p->width) {
+		p->x -= p->vel * delta;
+	}
+}
+	
 void player_draw(sdl_state *state, player *p)
 {
 	SDL_RenderCopy(state->renderer,
@@ -72,4 +90,10 @@ void player_draw(sdl_state *state, player *p)
 				   p->y,
 				   p->width,
 				   p->height});
+}
+
+void player_aim(player *p, int x, int y)
+{
+        p->direction = atan2(y - p->y,
+			     x - p->x);
 }

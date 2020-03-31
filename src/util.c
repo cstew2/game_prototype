@@ -1,5 +1,7 @@
+#include <stdlib.h>
 #include <limits.h>
 #include <float.h>
+#include <math.h>
 
 #include "util.h"
 
@@ -107,4 +109,78 @@ void sorti(int *array, int length)
 			array[min] = array[i];
 		}
 	}
+}
+
+bool point_in_poly(int x, int y, int loc_x, int loc_y, point *vertices, size_t vertex_count)
+{
+	bool inside = false;
+	int j=vertex_count-1;
+	
+	for(int i=0; i < vertex_count; i++) {
+		int xi = loc_x + vertices[i].x;
+		int yi = loc_y + vertices[i].y;
+		
+		int xj = loc_x + vertices[j].x;
+		int yj = loc_y + vertices[j].y;
+		
+		bool a = (yi > y) != (yj > y);
+		
+		int grad = xi + (xj - xi) * (y - yi) / (yj - yi);
+		if(a && x < grad) {
+			inside = !inside;
+		}
+
+		j=i;
+	}
+	return inside;
+}
+
+point circle_poly_collision(int x1, int y1, int radius,
+			    int x2, int y2, point *vertices, size_t vertex_count)
+{
+	if(point_in_poly(radius + x1, y1, x2, y2, vertices, vertex_count)) {
+		return (point){radius + x1, y1};
+	}
+	if(point_in_poly(x1, radius + y1, x2, y2, vertices, vertex_count)) {
+		return (point){x1, radius + y1};
+	}
+	if(point_in_poly(radius - x1, y1, x2, y2, vertices, vertex_count)) {
+		return (point){radius - x1, y1};
+	}
+	if(point_in_poly(x1, radius - y1, x2, y2, vertices, vertex_count)){
+		return (point){x1, radius - y1};
+	}
+	if(point_in_poly(radius + x1, radius + y1, x2, y2, vertices, vertex_count)) {
+		return (point){radius + x1, radius + y1};
+	}
+	if(point_in_poly(radius - x1, radius + y1, x2, y2, vertices, vertex_count)) {
+		return (point){radius - x1, radius + y1};						
+	}
+	if(point_in_poly(radius + x1, radius - y1, x2, y2, vertices, vertex_count)) {
+		return (point){radius + x1, radius - y1};
+	}
+	if(point_in_poly(radius - x1, radius - y1, x2, y2, vertices, vertex_count)) {
+		return (point){radius - x1, radius - y1};
+	}
+	return (point){-1, -1};
+}
+
+point circle_collision(int x1, int y1, int r1, int x2, int y2, int r2)
+{
+	int dx = x1 - x2;
+	int dy = y1 - y2;
+	int distance = sqrt(dx * dx + dy * dy);
+
+	if(distance < r1 + r2) {
+		return (point){dx, dy};
+	}
+	return (point){-1, -1};
+}
+
+point *poly_collision(int x1, int y1, point *v1, size_t v1_count,
+		      int x2, int y2, point *v2, size_t v2_count)
+{
+        point *p = calloc(2, sizeof(point));
+
+	return p;
 }

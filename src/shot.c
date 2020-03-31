@@ -40,6 +40,7 @@ shot *shot_init(sdl_state *state, player *owner)
 	
 	s->width = size;
 	s->height = size;
+	s->radius = radius;
 	
        	s->out = false;
 	s->owner = owner;
@@ -68,8 +69,44 @@ void shot_out(sdl_state *state, shot *s)
 	}
 }
 
-void shot_normal_update(shot *s, float delta)
+void shot_object_collide(shot *s, object *o)
 {
+	point p = circle_poly_collision(s->x, s->y, s->radius,
+					o->x, o->y, o->vertices, o->vertex_count);
+	
+	if(p.x != -1 && p.y != -1) {
+		if(o->type == object_reflect) {
+			int nx = (s->x - p.x);
+			int ny = (s->y - p.y);
+
+			int u = ((s->xvel * nx) + (s->yvel * ny)/(nx * nx)+(ny * ny));
+			int ux = nx*u;
+			int uy = ny*u;
+			
+			int wx = s->xvel - ux;
+			int wy = s->yvel - uy;
+			
+			s->xvel = wx - ux;
+			s->yvel = wy - uy;
+		}
+	}
+		
+}
+
+bool shot_player_collide(shot *s, player *p)
+{
+	point i = circle_collision(s->x, s->y, s->radius, p->x, p->y, p->radius);
+	return i.x != -1 && i.y != -1;
+		
+}
+
+void shot_update(shot *s, object **objects, size_t object_count,
+		 player **players, size_t player_count, float delta)
+{
+	for(int i=0; i < object_count; i++) {
+		shot_object_collide(s, objects[i]);
+	}
+	
 	s->x -= s->xvel * delta;
 	s->y -= s->yvel * delta;
 }

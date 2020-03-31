@@ -75,6 +75,7 @@ int draw_line_high(uint32_t *bitmap, uint32_t colour, int width, int x0, int x1,
 	return 0;
 }
 
+//could use bresenhems midpoint algo
 int draw_circle(uint32_t *bitmap, uint32_t colour, int width, int x, int y, int r)
 {	
 	for (int i = -r; i < r ; i++)
@@ -87,35 +88,16 @@ int draw_circle(uint32_t *bitmap, uint32_t colour, int width, int x, int y, int 
 	return 0;
 }
 
+//could use a more efficent one
 int draw_poly(uint32_t *bitmap, uint32_t colour, int width, int height, point *vertices, size_t vertex_count)
 {
 	for(int y=0; y < height; y++) {
 		for(int x=0; x < width; x++) {
-			if(point_in_poly(x, y, vertices, vertex_count)) {
+			if(point_in_poly(x, y, 0, 0, vertices, vertex_count)) {
 				bitmap[y * width + x] = colour;
 			}
 		}
-		printf("\n");
 	}
 	
 	return 0;
-}
-
-bool point_in_poly(int x, int y, point *vertices, size_t vertex_count)
-{
-	bool inside = false;
-	int j=vertex_count-1;
-	
-	for(int i=0; i < vertex_count; i++) {
-		bool a = (vertices[i].y > y) != (vertices[j].y > y);
-		int grad = vertices[i].x +
-			(vertices[j].x - vertices[i].x) *
-			(y - vertices[i].y) /
-			(vertices[j].y - vertices[i].y);
-		if(a && x < grad) {
-			inside = !inside;
-		}
-		j=i;
-	}
-	return inside;
 }

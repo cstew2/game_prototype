@@ -13,6 +13,5 @@ int draw_line_low(uint32_t *bitmap, uint32_t colour, int width, int x0, int x1, 
 int draw_circle(uint32_t *bitmap, uint32_t colour, int width, int x, int y, int r);
 
 int draw_poly(uint32_t *bitmap, uint32_t colour, int width, int height, point *vertices, size_t vertex_count);
-bool point_in_poly(int x, int y, point *vertices, size_t vertex_count);
 
 #endif
