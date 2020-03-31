@@ -75,19 +75,13 @@ void shot_object_collide(shot *s, object *o)
 					o->x, o->y, o->vertices, o->vertex_count);
 	
 	if(p.x != -1 && p.y != -1) {
+		if(o->type == object_bounce) {
+			s->xvel = -s->xvel;
+			s->yvel = -s->yvel;
+		}
 		if(o->type == object_reflect) {
-			int nx = (s->x - p.x);
-			int ny = (s->y - p.y);
-
-			int u = ((s->xvel * nx) + (s->yvel * ny)/(nx * nx)+(ny * ny));
-			int ux = nx*u;
-			int uy = ny*u;
-			
-			int wx = s->xvel - ux;
-			int wy = s->yvel - uy;
-			
-			s->xvel = wx - ux;
-			s->yvel = wy - uy;
+			s->xvel = -s->xvel;
+			s->yvel = -s->yvel;
 		}
 	}
 		

@@ -38,7 +38,7 @@ game_state *game_init()
 		return NULL;
 	}
 
-	state->object_count = 1;
+	state->object_count = 3;
 	size_t vertex_count = 4;
 	point *vertices = calloc(vertex_count, sizeof(point));
 	vertices[0] = (point){100, 0};
@@ -47,8 +47,16 @@ game_state *game_init()
 	vertices[3] = (point){0, 100};
 	
 	state->objects = calloc(state->object_count, sizeof(object));
-	state->objects[0] = object_init(state->sdl, object_reflect, object_polygon, 0xBB1530FF,
+	state->objects[0] = object_init(state->sdl, object_bounce, object_polygon, 0xEE3080FF,
 					200, 200, vertices, vertex_count);
+
+	state->objects[1] = object_init(state->sdl, object_bounce, object_polygon, 0xEE3080FF,
+					350, 350, vertices, vertex_count);
+
+	state->objects[2] = object_init(state->sdl, object_reflect, object_polygon, 0xEE3080FF,
+					100, 100, vertices, vertex_count);
+	
+	
 	free(vertices);
 	
 	state->shot_max = 128;
@@ -223,7 +231,10 @@ void update(game_state *state)
 		
 		for(int j=0; j < state->player_count; j++) {
 			if(shot_player_collide(state->shots[idx], state->players[j])) {
-				printf("Player %i wins\n", state->shots[idx]->owner->num);
+				if(state->shots[idx]->owner != state->players[j]) {
+					printf("Player %i wins\n", state->shots[idx]->owner->num);
+					state->quit = true;
+				}
 			}
 		}
 	}
