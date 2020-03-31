@@ -17,6 +17,7 @@ typedef struct {
 	
 }menu;
 
+
 menu *menu_init(game_state *state, char *title, char *subtitle);
 void menu_term(menu *m);
 	

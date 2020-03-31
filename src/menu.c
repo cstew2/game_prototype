@@ -95,3 +95,4 @@ void menu_loop(menu *m, game_state *state)
 		
 	SDL_RenderPresent(state->sdl->renderer);
 }
+
