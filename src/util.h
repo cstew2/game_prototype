@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 extern const float PI;
-extern const float M_PI_2;
-extern const float M_PI_4;
+extern const float PI_2;
+extern const float PI_4;
 
 typedef struct {
 	float x;

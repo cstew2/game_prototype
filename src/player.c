@@ -51,7 +51,7 @@ player *player_init(sdl_state *state, int x, int y, float vel, uint32_t colour, 
 	p->y = y;
 	p->vel = vel;
 	p->power = 0.5;
-	p->direction = M_PI/3;
+	p->direction = PI/3;
 
 	p->shot_colour = 0x000000FF;
 	
