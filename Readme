@@ -23,9 +23,11 @@ gcc: 9.2.0-r2
 SDL2: 2.0.10
 SDL2-ttf: 2.0.14
 
-
 Build with:
 make
+
+or to build with statically linked SDL
+BUILD=release make
 
 Run with:
 make run
